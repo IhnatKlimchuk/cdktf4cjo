@@ -1,14 +1,14 @@
-import { Construct } from "constructs";
-import { App, TerraformStack } from "cdktf";
-
-class MyStack extends TerraformStack {
-  constructor(scope: Construct, id: string) {
-    super(scope, id);
-
-    // define resources here
-  }
-}
+import { App } from "cdktf";
+import { WeatherServiceStack } from "./src/services/WeatherServiceStack";
+import { Environment, Subscription } from "./src/common/Environment";
 
 const app = new App();
-new MyStack(app, "cdktf4cjo");
+
+const devWestEurope: Environment = { name: "dev", region: "westeurope", subscription: Subscription.VisualStudioEnterprise }
+const prodEastUs: Environment = { name: "prod", region: "eastus", subscription: Subscription.VisualStudioEnterprise }
+const prodWestEurope: Environment = { name: "prod", region: "westeurope", subscription: Subscription.VisualStudioEnterprise }
+
+new WeatherServiceStack(app, devWestEurope);
+new WeatherServiceStack(app, prodEastUs);
+new WeatherServiceStack(app, prodWestEurope);
 app.synth();
