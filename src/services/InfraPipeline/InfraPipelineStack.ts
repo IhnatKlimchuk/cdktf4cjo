@@ -14,7 +14,7 @@ export class InfraPipelineStack extends ServiceStack {
             location: this.region,
             name: ServiceStack.getUniqueName("infra-pipeline-identity", env),
             resourceGroupName: this.resourceGroup.name,
-        })       
+        })
 
         new RoleAssignment(this, "role", {
             principalId: identity.principalId,

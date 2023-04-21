@@ -2,13 +2,11 @@ import { Construct } from "constructs";
 import { TerraformStack, AzurermBackend } from "cdktf";
 import { AzurermProvider } from "@cdktf/provider-azurerm/lib/provider";
 import { Environment, CloudEnvironment, Subscription, Region } from "./Environment";
-import { ResourceGroup } from "@cdktf/provider-azurerm/lib/resource-group";
 
 export class Stack extends TerraformStack {
     region: Region;
     cloudEnvironment: CloudEnvironment
     subscription: Subscription
-    resourceGroup: ResourceGroup
 
     constructor(scope: Construct, id: string, env: Environment) {
         super(scope, Stack.getUniqueName(id, env));
@@ -28,11 +26,6 @@ export class Stack extends TerraformStack {
             containerName: "tfstate",
             key: Stack.getUniqueName(id, env),
             resourceGroupName: "prod-infra-pipeline-westeurope"
-        });
-
-        this.resourceGroup = new ResourceGroup(this, "resource-group", {
-            location: this.region,
-            name: Stack.getUniqueName(id, env)
         });
     }
 

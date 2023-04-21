@@ -2,7 +2,7 @@ import { Construct } from "constructs";
 import { Environment } from "../../common/Environment";
 import { ServiceStack } from "../../common/ServiceStack";
 import { UserAssignedIdentity } from "@cdktf/provider-azurerm/lib/user-assigned-identity";
-//import { RoleAssignment } from "@cdktf/provider-azurerm/lib/role-assignment";
+import { RoleAssignment } from "@cdktf/provider-azurerm/lib/role-assignment";
 import { CosmosdbMongoDatabase } from "@cdktf/provider-azurerm/lib/cosmosdb-mongo-database";
 import { CosmosdbMongoCollection } from "@cdktf/provider-azurerm/lib/cosmosdb-mongo-collection";
 import { CosmosdbAccount } from "@cdktf/provider-azurerm/lib/cosmosdb-account";
@@ -19,11 +19,11 @@ export class WeatherResourceStack extends ServiceStack {
             resourceGroupName: this.resourceGroup.name,
         })
 
-        // new RoleAssignment(this, "role", {
-        //     principalId: this.userIdentity.clientId,
-        //     scope: `/subscriptions/${this.subscription}/resourceGroups/${this.resourceGroup.name}`,
-        //     roleDefinitionName: ""
-        // })
+        new RoleAssignment(this, "role", {
+            principalId: this.userIdentity.principalId,
+            scope: `/subscriptions/${this.subscription}/resourceGroups/${this.resourceGroup.name}`,
+            roleDefinitionName: ""
+        })
 
         const account = new CosmosdbAccount(this, "database-account", {
             location: this.region,
@@ -41,18 +41,11 @@ export class WeatherResourceStack extends ServiceStack {
             },
             kind: "MongoDB",
             enableAutomaticFailover: true,
-
             timeouts: {
-                create: "20m",
-                update: "20m",
-                delete: "20m",
+                create: "30m",
+                update: "30m",
+                delete: "30m",
             }
-            
-
-            // identity: {
-            //     type: "UserAssigned",
-            //     identityIds: [this.userIdentity.clientId]
-            // }
         })
 
         const database = new CosmosdbMongoDatabase(this, "database", {
@@ -62,7 +55,6 @@ export class WeatherResourceStack extends ServiceStack {
             throughput: 400
         })
 
-        //const collection = 
         new CosmosdbMongoCollection(this, "collection", {
             accountName: account.name,
             databaseName: database.name,
