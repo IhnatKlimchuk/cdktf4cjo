@@ -13,27 +13,24 @@ const prodWestEurope: Environment = { name: "prod", region: "westeurope", subscr
 // Infrastructure 
 new InfraPipelineStack(app, prodWestEurope);
 
-
+// Weather service
 {
-    // Weather service
-    {
-        // dev
-        const { userIdentity } = new WeatherResourceStack(app, devWestEurope);
-        new WeatherApiStack(app, devWestEurope, { 
-            identityIds: [userIdentity.id]
-        });
-    }
-    {
-        // prod
-        const { userIdentity } = new WeatherResourceStack(app, prodWestEurope);
+    // dev
+    const { userIdentity } = new WeatherResourceStack(app, devWestEurope);
+    new WeatherApiStack(app, devWestEurope, { 
+        identityIds: [userIdentity.id]
+    });
+}
+{
+    // prod
+    const { userIdentity } = new WeatherResourceStack(app, prodWestEurope);
 
-        new WeatherApiStack(app, prodWestEurope, {
-            identityIds: [userIdentity.id]
-        });
-        new WeatherApiStack(app, prodEastUs, {
-            identityIds: [userIdentity.id]
-        });
-    }
+    new WeatherApiStack(app, prodWestEurope, {
+        identityIds: [userIdentity.id]
+    });
+    new WeatherApiStack(app, prodEastUs, {
+        identityIds: [userIdentity.id]
+    });
 }
 
 app.synth();
