@@ -4,6 +4,7 @@ import { Environment } from "../../common/Environment";
 import { LinuxWebApp } from "@cdktf/provider-azurerm/lib/linux-web-app";
 import { ServicePlan } from "@cdktf/provider-azurerm/lib/service-plan";
 import { Stack } from "../../common/Stack";
+import { ServiceMessagingHub } from "../../constructs/ServiceMessagingHub";
 
 export interface WeatherApiStackProps {
     identityIds?: string[]
@@ -33,6 +34,12 @@ export class WeatherApiStack extends ServiceStack {
                 type: "UserAssigned",
                 identityIds: identityIds
             }
+        })
+
+        new ServiceMessagingHub(this, "weather", {
+            env: env,
+            resourceGroup: this.resourceGroup,
+            hubs: ["test"]
         })
     }
 }
